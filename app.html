@@ -228,10 +228,17 @@
       margin-bottom: 20px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
       font-family: var(--font-display);
+    }
+
+    .card-title-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     /* 纪念日 */
@@ -299,7 +306,6 @@
     }
 
     /* 倒计时 */
-       /* 倒计时 */
     .countdown-wrapper {
       position: relative;
     }
@@ -335,7 +341,6 @@
     }
 
     [data-theme="light"] .countdown-label {
-<!--      color: rgba(255, 255, 255, 0.8);-->
       color: var(--text-secondary);
     }
 
@@ -356,10 +361,8 @@
       text-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
     }
 
-    [data-theme="light"] .countdown-number {W
+    [data-theme="light"] .countdown-number {
        color: var(--accent-1);
-<!--      color: white;-->
-<!--      -webkit-text-fill-color: white;-->
     }
 
     .countdown-text {
@@ -371,7 +374,6 @@
 
     [data-theme="light"] .countdown-text {
       color: var(--text-primary);
-<!--      color: rgba(255, 255, 255, 0.9);fefefefe -->
     }
 
     .countdown-text span {
@@ -387,10 +389,6 @@
       color: var(--accent-1);
       text-shadow: none;
     }
-
-
-
-
 
     /* 输入区域 */
     .input-group {
@@ -487,6 +485,62 @@
     [data-theme="light"] .btn-secondary {
       border-color: var(--accent-2);
       color: var(--accent-2);
+    }
+
+    /* 折叠/展开按钮 */
+    .toggle-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-family: var(--font-display);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toggle-btn:hover {
+      border-color: var(--accent-1);
+      color: var(--accent-1);
+      box-shadow: var(--glow-1);
+    }
+
+    .toggle-btn .arrow {
+      transition: transform 0.3s ease;
+      display: inline-block;
+    }
+
+    .toggle-btn.collapsed .arrow {
+      transform: rotate(-90deg);
+    }
+
+    /* 折叠区域 */
+    .collapsible-content {
+      max-height: 400px;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .collapsible-content.collapsed {
+      max-height: 200px;
+    }
+
+    .collapsible-content.collapsed::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(transparent, var(--bg-primary));
+      pointer-events: none;
+      opacity: 0.8;
     }
 
     /* 留言列表 */
@@ -588,11 +642,27 @@
     }
 
     /* 时间轴 */
+    .timeline-container {
+      max-height: 350px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .timeline-container::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .timeline-container::-webkit-scrollbar-thumb {
+      background: var(--accent-1);
+      border-radius: 2px;
+    }
+
     .timeline-list {
       list-style: none;
-      margin-top: 20px;
       position: relative;
       padding-left: 24px;
+      margin-top: 0;
     }
 
     .timeline-list::before {
@@ -614,6 +684,10 @@
       position: relative;
       padding-bottom: 20px;
       animation: slideIn 0.4s ease;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
     }
 
     .timeline-item::before {
@@ -677,6 +751,73 @@
       opacity: 1;
     }
 
+    /* 分页控制 */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .pagination-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-family: var(--font-display);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pagination-btn:hover:not(:disabled) {
+      border-color: var(--accent-1);
+      color: var(--accent-1);
+      box-shadow: var(--glow-1);
+    }
+
+    .pagination-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .pagination-info {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      letter-spacing: 1px;
+    }
+
+    /* 加载更多按钮 */
+    .load-more-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px dashed var(--card-border);
+      color: var(--text-secondary);
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-family: var(--font-display);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 12px;
+      letter-spacing: 1px;
+    }
+
+    .load-more-btn:hover {
+      border-color: var(--accent-1);
+      color: var(--accent-1);
+      background: rgba(168, 197, 181, 0.05);
+    }
+
     /* 空状态 */
     .empty-state {
       text-align: center;
@@ -689,6 +830,16 @@
       font-size: 40px;
       margin-bottom: 12px;
       opacity: 0.6;
+    }
+
+    /* 统计信息 */
+    .list-stats {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      letter-spacing: 1px;
+      margin-left: auto;
+      margin-right: 8px;
     }
 
     /* 响应式 */
@@ -742,7 +893,11 @@
 
   <!-- 纪念日 -->
   <div class="card">
-    <div class="card-title" id="daysTitle">◈ Timeline</div>
+    <div class="card-title">
+      <div class="card-title-left">
+        <span id="daysTitle">◈ Timeline</span>
+      </div>
+    </div>
     <div class="days-grid">
       <div class="day-card">
         <div class="day-label" id="loveLabel">Love</div>
@@ -770,37 +925,80 @@
 
   <!-- 留言区 -->
   <div class="card">
-    <div class="card-title" id="msgTitle">◉ Transmission</div>
-    <div class="input-group">
-      <select id="author" onchange="setCurrentUser()">
-        <option value="">选择身份</option>
-        <option value="SY">SY</option>
-        <option value="JY">JY</option>
-      </select>
-      <div class="input-row">
-        <input id="messageText" placeholder="输入消息..." style="flex: 1;" />
-        <button class="btn" onclick="addMessage()" style="width: auto;">发送</button>
+    <div class="card-title">
+      <div class="card-title-left">
+        <span id="msgTitle">◉ Transmission</span>
+        <span class="list-stats" id="msgStats"></span>
+      </div>
+      <button class="toggle-btn" id="msgToggle" onclick="toggleSection('messages')">
+        <span class="text">收起</span>
+        <span class="arrow">▼</span>
+      </button>
+    </div>
+
+    <div class="collapsible-content" id="msgContent">
+      <div class="input-group">
+        <select id="author" onchange="setCurrentUser()">
+          <option value="">选择身份</option>
+          <option value="SY">SY</option>
+          <option value="JY">JY</option>
+        </select>
+        <div class="input-row">
+          <input id="messageText" placeholder="输入消息..." style="flex: 1;" />
+          <button class="btn" onclick="addMessage()" style="width: auto;">发送</button>
+        </div>
+      </div>
+
+      <ul id="messages" class="message-list"></ul>
+
+      <div class="pagination" id="msgPagination" style="display: none;">
+        <button class="pagination-btn" onclick="changePage('messages', -1)" id="msgPrev">
+          ← 上一页
+        </button>
+        <span class="pagination-info" id="msgPageInfo">1 / 1</span>
+        <button class="pagination-btn" onclick="changePage('messages', 1)" id="msgNext">
+          下一页 →
+        </button>
       </div>
     </div>
-    <ul id="messages" class="message-list">
-      <li class="empty-state">
-        <div class="empty-state-icon" id="msgEmptyIcon">📡</div>
-        <span id="msgEmpty">等待信号...</span>
-      </li>
-    </ul>
   </div>
 
   <!-- 时间轴 -->
   <div class="card">
-    <div class="card-title" id="timelineTitle">◎ Star Map</div>
-    <div class="input-group">
-      <input id="eventText" placeholder="记录事件..." />
-      <div class="input-row">
-        <input id="eventDate" type="date" style="flex: 1;" />
-        <button class="btn btn-secondary" onclick="addEvent()" style="width: auto;">记录</button>
+    <div class="card-title">
+      <div class="card-title-left">
+        <span id="timelineTitle">◎ Star Map</span>
+        <span class="list-stats" id="timelineStats"></span>
+      </div>
+      <button class="toggle-btn" id="timelineToggle" onclick="toggleSection('timeline')">
+        <span class="text">收起</span>
+        <span class="arrow">▼</span>
+      </button>
+    </div>
+
+    <div class="collapsible-content" id="timelineContent">
+      <div class="input-group">
+        <input id="eventText" placeholder="记录事件..." />
+        <div class="input-row">
+          <input id="eventDate" type="date" style="flex: 1;" />
+          <button class="btn btn-secondary" onclick="addEvent()" style="width: auto;">记录</button>
+        </div>
+      </div>
+
+      <div class="timeline-container" id="timelineContainer">
+        <ul id="timeline" class="timeline-list"></ul>
+      </div>
+
+      <div class="pagination" id="timelinePagination" style="display: none;">
+        <button class="pagination-btn" onclick="changePage('timeline', -1)" id="timelinePrev">
+          ← 上一页
+        </button>
+        <span class="pagination-info" id="timelinePageInfo">1 / 1</span>
+        <button class="pagination-btn" onclick="changePage('timeline', 1)" id="timelineNext">
+          下一页 →
+        </button>
       </div>
     </div>
-    <ul id="timeline" class="timeline-list"></ul>
   </div>
 
 </div>
@@ -841,8 +1039,14 @@
     document.getElementById('msgTitle').innerHTML = isLight ? '<span>💌</span> 留言' : '<span>◉</span> Transmission';
     document.getElementById('timelineTitle').innerHTML = isLight ? '<span>🕰</span> 大事记' : '<span>◎</span> Star Map';
 
-    document.getElementById('msgEmptyIcon').textContent = isLight ? '💭' : '📡';
-    document.getElementById('msgEmpty').textContent = isLight ? '还没有留言，来说点什么吧～' : '等待信号...';
+    // 更新按钮文字
+    document.querySelectorAll('.toggle-btn .text').forEach(el => {
+      if (el.parentElement.classList.contains('collapsed')) {
+        el.textContent = isLight ? '展开' : 'Expand';
+      } else {
+        el.textContent = isLight ? '收起' : 'Collapse';
+      }
+    });
 
     // 更新输入框 placeholder
     document.getElementById('author').options[0].text = isLight ? '选择身份' : '选择身份';
@@ -908,6 +1112,149 @@
     localStorage.setItem('loverUser', user);
   }
 
+  // 分页和折叠管理
+  const paginationState = {
+    messages: { page: 1, pageSize: 5, total: 0, collapsed: false, data: [] },
+    timeline: { page: 1, pageSize: 6, total: 0, collapsed: false, data: [] }
+  };
+
+  function toggleSection(section) {
+    const state = paginationState[section];
+    state.collapsed = !state.collapsed;
+
+    const contentId = section === 'messages' ? 'msgContent' : 'timelineContent';
+    const toggleId = section === 'messages' ? 'msgToggle' : 'timelineToggle';
+
+    const content = document.getElementById(contentId);
+    const toggle = document.getElementById(toggleId);
+    const text = toggle.querySelector('.text');
+
+    if (state.collapsed) {
+      content.classList.add('collapsed');
+      toggle.classList.add('collapsed');
+      text.textContent = currentTheme === 'light' ? '展开' : 'Expand';
+    } else {
+      content.classList.remove('collapsed');
+      toggle.classList.remove('collapsed');
+      text.textContent = currentTheme === 'light' ? '收起' : 'Collapse';
+      // 展开时滚动到内容区域
+      setTimeout(() => {
+        content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+  }
+
+  function changePage(section, direction) {
+    const state = paginationState[section];
+    const newPage = state.page + direction;
+
+    if (newPage < 1 || newPage > Math.ceil(state.total / state.pageSize)) return;
+
+    state.page = newPage;
+    renderList(section);
+
+    // 翻页后滚动到列表顶部
+    const containerId = section === 'messages' ? 'messages' : 'timelineContainer';
+    document.getElementById(containerId).scrollTop = 0;
+  }
+
+  function renderList(section) {
+    const state = paginationState[section];
+    const start = (state.page - 1) * state.pageSize;
+    const end = start + state.pageSize;
+    const pageData = state.data.slice(start, end);
+
+    const listId = section === 'messages' ? 'messages' : 'timeline';
+    const list = document.getElementById(listId);
+
+    if (state.data.length === 0) {
+      const emptyIcon = section === 'messages' ? (currentTheme === 'light' ? '💭' : '📡') : (currentTheme === 'light' ? '📝' : '🌌');
+      const emptyText = section === 'messages' ? (currentTheme === 'light' ? '还没有留言，来说点什么吧～' : '等待信号...') : (currentTheme === 'light' ? '还没有记录，添加你们的第一个回忆吧' : '星图空白...');
+
+      list.innerHTML = `
+        <li class="empty-state">
+          <div class="empty-state-icon">${emptyIcon}</div>
+          <span>${emptyText}</span>
+        </li>
+      `;
+      return;
+    }
+
+    list.innerHTML = "";
+
+    if (section === 'messages') {
+      pageData.forEach(m => {
+        const time = m.time ? new Date(m.time.toDate()).toLocaleString('zh-CN', {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : '';
+
+        const li = document.createElement("li");
+        li.className = "message-item";
+
+        const isOwner = m.author === currentUser;
+        const deleteBtn = isOwner ? `<button class="btn-delete" onclick="deleteMessage('${m.id}')">删除</button>` : '';
+
+        li.innerHTML = `
+          <div class="message-header">
+            <span class="message-author">${m.author}</span>
+            <span class="message-time">${time}</span>
+          </div>
+          <div class="message-text">${escapeHtml(m.text)}</div>
+          ${deleteBtn ? `<div class="message-actions">${deleteBtn}</div>` : ''}
+        `;
+        list.appendChild(li);
+      });
+    } else {
+      pageData.forEach(e => {
+        const li = document.createElement("li");
+        li.className = "timeline-item";
+        li.innerHTML = `
+          <div class="timeline-content">
+            <div class="timeline-text">${escapeHtml(e.text)}</div>
+            <div class="timeline-date">${e.date}</div>
+            <button class="btn-delete timeline-delete" onclick="deleteEvent('${e.id}')">删除</button>
+          </div>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    // 更新分页控件
+    updatePagination(section);
+
+    // 更新统计
+    const statsId = section === 'messages' ? 'msgStats' : 'timelineStats';
+    document.getElementById(statsId).textContent = `${state.total}条`;
+  }
+
+  function updatePagination(section) {
+    const state = paginationState[section];
+    const totalPages = Math.ceil(state.total / state.pageSize);
+
+    const paginationId = section === 'messages' ? 'msgPagination' : 'timelinePagination';
+    const prevId = section === 'messages' ? 'msgPrev' : 'timelinePrev';
+    const nextId = section === 'messages' ? 'msgNext' : 'timelinePageInfo';
+    const pageInfoId = section === 'messages' ? 'msgPageInfo' : 'timelinePageInfo';
+
+    const pagination = document.getElementById(paginationId);
+    const prevBtn = document.getElementById(prevId);
+    const nextBtn = document.getElementById(nextId);
+    const pageInfo = document.getElementById(pageInfoId);
+
+    if (totalPages <= 1) {
+      pagination.style.display = 'none';
+    } else {
+      pagination.style.display = 'flex';
+      pageInfo.textContent = `${state.page} / ${totalPages}`;
+      prevBtn.disabled = state.page === 1;
+      nextBtn.disabled = state.page === totalPages;
+    }
+  }
+
+  // 留言功能
   function addMessage() {
     const author = document.getElementById("author").value;
     const text = document.getElementById("messageText").value.trim();
@@ -925,50 +1272,23 @@
       time: new Date()
     }).then(() => {
       document.getElementById("messageText").value = "";
+      // 添加成功后跳转到第一页查看最新留言
+      paginationState.messages.page = 1;
     });
   }
 
+  // 实时监听留言
   db.collection("messages")
     .orderBy("time", "desc")
     .onSnapshot(snap => {
-      const list = document.getElementById("messages");
-      if (snap.empty) {
-        list.innerHTML = `
-          <li class="empty-state">
-            <div class="empty-state-icon">${currentTheme === 'light' ? '💭' : '📡'}</div>
-            ${currentTheme === 'light' ? '还没有留言，来说点什么吧～' : '等待信号...'}
-          </li>
-        `;
-        return;
-      }
-
-      list.innerHTML = "";
+      const data = [];
       snap.forEach(doc => {
-        const m = doc.data();
-        const time = m.time ? new Date(m.time.toDate()).toLocaleString('zh-CN', {
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }) : '';
-
-        const li = document.createElement("li");
-        li.className = "message-item";
-
-        const isOwner = m.author === currentUser;
-        const deleteBtn = isOwner ?
-          `<button class="btn-delete" onclick="deleteMessage('${doc.id}')">删除</button>` : '';
-
-        li.innerHTML = `
-          <div class="message-header">
-            <span class="message-author">${m.author}</span>
-            <span class="message-time">${time}</span>
-          </div>
-          <div class="message-text">${escapeHtml(m.text)}</div>
-          ${deleteBtn ? `<div class="message-actions">${deleteBtn}</div>` : ''}
-        `;
-        list.appendChild(li);
+        data.push({ ...doc.data(), id: doc.id });
       });
+
+      paginationState.messages.data = data;
+      paginationState.messages.total = data.length;
+      renderList('messages');
     });
 
   function deleteMessage(id) {
@@ -977,6 +1297,7 @@
     }
   }
 
+  // 时间轴功能
   function addEvent() {
     const text = document.getElementById("eventText").value.trim();
     const date = document.getElementById("eventDate").value;
@@ -993,35 +1314,18 @@
     });
   }
 
+  // 实时监听时间轴
   db.collection("timeline")
     .orderBy("date", "desc")
     .onSnapshot(snap => {
-      const list = document.getElementById("timeline");
-      list.innerHTML = "";
-
-      if (snap.empty) {
-        list.innerHTML = `
-          <li class="empty-state" style="margin-left: -24px;">
-            <div class="empty-state-icon">${currentTheme === 'light' ? '📝' : '🌌'}</div>
-            ${currentTheme === 'light' ? '还没有记录，添加你们的第一个回忆吧' : '星图空白...'}
-          </li>
-        `;
-        return;
-      }
-
+      const data = [];
       snap.forEach(doc => {
-        const e = doc.data();
-        const li = document.createElement("li");
-        li.className = "timeline-item";
-        li.innerHTML = `
-          <div class="timeline-content">
-            <div class="timeline-text">${escapeHtml(e.text)}</div>
-            <div class="timeline-date">${e.date}</div>
-            <button class="btn-delete timeline-delete" onclick="deleteEvent('${doc.id}')">删除</button>
-          </div>
-        `;
-        list.appendChild(li);
+        data.push({ ...doc.data(), id: doc.id });
       });
+
+      paginationState.timeline.data = data;
+      paginationState.timeline.total = data.length;
+      renderList('timeline');
     });
 
   function deleteEvent(id) {
