@@ -8,13 +8,13 @@
 </head>
 <body class="center">
   <h1>💖 Love Space</h1>
-  <input type="password" id="pin" placeholder="情侣暗号 PIN">
+  <input type="password" id="pin" placeholder="暗号 PIN">
   <button onclick="unlock()">进入</button>
 
   <script>
     function unlock() {
       const pin = document.getElementById("pin").value;
-      if (pin === "826") {   // ← 自己改
+      if (pin === "826") {   //
         localStorage.setItem("loverUnlocked", "true");
         window.location.href = "app.html";
       } else {
