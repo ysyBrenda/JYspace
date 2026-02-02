@@ -2,228 +2,1043 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Love Space 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Love Space</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&family=LXGW+WenKai:wght@400;700&display=swap" rel="stylesheet">
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-
-
   <style>
     :root {
-      --cream: #FFF8EE;
-      --latte: #F3E6D8;
-      --mocha: #E6D5C3;
-      --accent: #D8A48F;
-      --text: #4A3F35;
-      --card: #FFFFFF;
+      /* 默认夜晚主题 */
+      --bg-primary: #0F172A;
+      --bg-secondary: #1E1B4B;
+      --accent-1: #A78BFA;
+      --accent-2: #5EEAD4;
+      --accent-3: #F472B6;
+      --highlight: #FDE68A;
+      --text-primary: #F1F5F9;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --glow-1: 0 0 20px rgba(167, 139, 250, 0.4);
+      --glow-2: 0 0 20px rgba(94, 234, 212, 0.4);
+      --font-display: 'Space Mono', monospace;
+      --font-body: 'Noto Serif SC', serif;
+      --radius: 20px;
+    }
+
+    /* 白天主题 - 纯净奶油色 */
+    [data-theme="light"] {
+      --bg-primary: #FDFCF9;
+      --bg-secondary: #F8F6F1;
+      --accent-1: #A8C5B5;      /* sage 鼠尾草绿 */
+      --accent-2: #A8C8D8;      /* sky 天空蓝 */
+      --accent-3: #E8C4C4;      /* blush 腮红粉 */
+      --highlight: #D4A574;     /* 焦糖点缀 */
+      --text-primary: #5C5C5C;
+      --text-secondary: #8A8A8A;
+      --text-muted: #B5B5B5;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(168, 197, 181, 0.2);
+      --shadow: 0 4px 24px rgba(168, 197, 181, 0.15);
+      --glow-1: 0 4px 16px rgba(168, 197, 181, 0.2);
+      --glow-2: 0 4px 16px rgba(168, 200, 216, 0.2);
+      --font-display: 'Playfair Display', serif;
+      --font-body: 'LXGW WenKai', 'PingFang SC', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    @keyframes aurora {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
     }
 
     body {
-      margin: 0;
-      font-family: 'Inter', system-ui;
-      background: var(--cream);
-      color: var(--text);
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      background-size: 400% 400%;
+      animation: aurora 20s ease infinite;
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      transition: all 0.5s ease;
     }
 
+    /* 夜晚星空背景 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 230px 80px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 300px 150px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 350px 50px, rgba(255,255,255,0.9), transparent);
+      background-repeat: repeat;
+      background-size: 400px 250px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    body:not([data-theme="light"])::before {
+      opacity: 0.6;
+    }
+
+    /* 头部 */
     header {
-      padding: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(var(--bg-primary), 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 20px 16px;
       text-align: center;
+      transition: all 0.5s ease;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 520px;
+      margin: 0 auto 8px;
     }
 
     h1 {
-      margin: 0;
-      font-size: 26px;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      flex: 1;
+      text-align: center;
+    }
+
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: var(--glow-1);
+    }
+
+    /* 主题特定标题样式 */
+    body:not([data-theme="light"]) h1 {
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+      text-transform: uppercase;
+    }
+
+    [data-theme="light"] h1 {
+      color: var(--accent-1);
+      font-style: italic;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: var(--text-secondary);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: var(--font-display);
     }
 
     .container {
-      padding: 16px;
       max-width: 520px;
-      margin: auto;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 18px;
-    }
-
-    .days {
+      margin: 0 auto;
+      padding: 24px 16px;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 卡片 */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      transition: all 0.5s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-1);
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-family: var(--font-display);
+    }
+
+    /* 纪念日 */
+    .days-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .day-card {
+      background: linear-gradient(135deg, rgba(var(--accent-1), 0.1) 0%, rgba(var(--accent-2), 0.1) 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 24px 16px;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    body:not([data-theme="light"]) .day-card {
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    [data-theme="light"] .day-card {
+      background: linear-gradient(135deg, rgba(168, 197, 181, 0.15) 0%, rgba(168, 200, 216, 0.15) 100%);
+    }
+
+    .day-card:hover {
+      border-color: var(--accent-1);
+      box-shadow: var(--glow-1);
+    }
+
+    .day-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: var(--font-display);
+    }
+
+    .day-number {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent-1);
+      line-height: 1;
+      margin: 12px 0;
+      transition: all 0.5s ease;
+    }
+
+    body:not([data-theme="light"]) .day-number {
+      text-shadow: 0 0 20px rgba(167, 139, 250, 0.5);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    [data-theme="light"] .day-number {
+      color: var(--accent-1);
+    }
+
+    .day-unit {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      font-family: var(--font-display);
+    }
+
+    /* 倒计时 */
+       /* 倒计时 */
+    .countdown-wrapper {
+      position: relative;
+    }
+
+    .countdown-box {
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s ease;
+    }
+
+    body:not([data-theme="light"]) .countdown-box {
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.2) 0%, rgba(94, 234, 212, 0.2) 100%);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    [data-theme="light"] .countdown-box {
+      background: rgba(168, 200, 216, 0.13);
+      border: 1px solid rgba(168, 200, 216, 0.2);
+      box-shadow: none;
+    }
+
+    .countdown-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: var(--font-display);
+    }
+
+    [data-theme="light"] .countdown-label {
+<!--      color: rgba(255, 255, 255, 0.8);-->
+      color: var(--text-secondary);
+    }
+
+    .countdown-number {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      transition: all 0.5s ease;
+      line-height: 1;
+      margin: 12px 0;
+    }
+
+    body:not([data-theme="light"]) .countdown-number {
+      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+    }
+
+    [data-theme="light"] .countdown-number {W
+       color: var(--accent-1);
+<!--      color: white;-->
+<!--      -webkit-text-fill-color: white;-->
+    }
+
+    .countdown-text {
+      font-size: 10px;
+      margin-top: 16px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    [data-theme="light"] .countdown-text {
+      color: var(--text-primary);
+<!--      color: rgba(255, 255, 255, 0.9);fefefefe -->
+    }
+
+    .countdown-text span {
+      color: var(--highlight);
+      font-weight: 700;
+    }
+
+    body:not([data-theme="light"]) .countdown-text span {
+      text-shadow: 0 0 10px rgba(253, 230, 138, 0.5);
+    }
+
+    [data-theme="light"] .countdown-text span {
+      color: var(--accent-1);
+      text-shadow: none;
+    }
+
+
+
+
+
+    /* 输入区域 */
+    .input-group {
+      display: flex;
+      flex-direction: column;
       gap: 12px;
     }
 
-    .day-box {
-      flex: 1;
-      background: #fff0f6;
-      border-radius: 12px;
-      padding: 12px;
-      text-align: center;
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: stretch;
     }
 
-    .day-box span {
-      display: block;
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .countdown {
-      text-align: center;
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
+    select, input {
+      font-family: var(--font-body);
+      background: rgba(var(--bg-primary), 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 16px;
       font-size: 14px;
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.3s ease;
+      width: 100%;
     }
 
-    button {
-      background: var(--accent);
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A8C5B5' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    body:not([data-theme="light"]) select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A78BFA' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent-1);
+      box-shadow: 0 0 0 3px rgba(168, 197, 181, 0.1);
+    }
+
+    body:not([data-theme="light"]) select:focus,
+    body:not([data-theme="light"]) input:focus {
+      box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2), var(--glow-1);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* 按钮 */
+    .btn {
+      background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
       color: white;
       border: none;
-      font-weight: 600;
+      border-radius: 14px;
+      padding: 14px 28px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--glow-1);
+      position: relative;
+      overflow: hidden;
+      font-family: var(--font-display);
     }
 
-    ul {
+    body:not([data-theme="light"]) .btn {
+      box-shadow: 0 4px 20px rgba(167, 139, 250, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--accent-2);
+      color: var(--accent-2);
+    }
+
+    body:not([data-theme="light"]) .btn-secondary {
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+    }
+
+    [data-theme="light"] .btn-secondary {
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+    }
+
+    /* 留言列表 */
+    .message-list {
       list-style: none;
-      padding: 0;
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    li {
-      padding: 8px 0;
-      border-left: 3px solid var(--accent);
-      padding-left: 12px;
+    .message-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      animation: slideIn 0.4s ease;
+      transition: all 0.3s ease;
+    }
+
+    body:not([data-theme="light"]) .message-item {
+      border-left: 3px solid var(--accent-1);
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    [data-theme="light"] .message-item {
+      border-left: 3px solid var(--accent-1);
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 8px;
     }
 
-    .time {
-      font-size: 12px;
-      color: #999;
+    .message-author {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--accent-1);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .message-time {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+    }
+
+    .message-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .message-actions {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .message-item:hover .message-actions {
+      opacity: 1;
+    }
+
+    .btn-delete {
+      background: transparent;
+      border: 1px solid var(--text-muted);
+      color: var(--text-muted);
+      font-size: 10px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+    }
+
+    .btn-delete:hover {
+      border-color: var(--accent-3);
+      color: var(--accent-3);
+    }
+
+    /* 时间轴 */
+    .timeline-list {
+      list-style: none;
+      margin-top: 20px;
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .timeline-list::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent-1), var(--accent-2));
+      border-radius: 2px;
+    }
+
+    body:not([data-theme="light"]) .timeline-list::before {
+      box-shadow: 0 0 10px var(--accent-1);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 20px;
+      animation: slideIn 0.4s ease;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -22px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      background: var(--bg-primary);
+      border: 2px solid var(--accent-2);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    body:not([data-theme="light"]) .timeline-item::before {
+      box-shadow: 0 0 10px var(--accent-2);
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .timeline-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-left: 8px;
+      transition: all 0.3s ease;
+    }
+
+    body:not([data-theme="light"]) .timeline-content {
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    [data-theme="light"] .timeline-content {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .timeline-text {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .timeline-date {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-family: var(--font-display);
+      letter-spacing: 1px;
+    }
+
+    .timeline-delete {
+      position: absolute;
+      right: 8px;
+      top: 14px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .timeline-item:hover .timeline-delete {
+      opacity: 1;
+    }
+
+    /* 空状态 */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .empty-state-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      opacity: 0.6;
+    }
+
+    /* 响应式 */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 12px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .day-number {
+        font-size: 32px;
+      }
+
+      .countdown-number {
+        font-size: 40px;
+      }
+    }
+
+    /* 滚动条 */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-1);
+      border-radius: 3px;
     }
   </style>
 </head>
 <body>
 
-
 <header>
-  <h1>💖 SY and JY ‘Love Space</h1>
+  <div class="header-top">
+    <div style="width: 44px;"></div>
+    <h1>Love Space</h1>
+    <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+      <span id="themeIcon">🌙</span>
+    </button>
+  </div>
+  <div class="subtitle" id="subtitle">SY & JY // COSMIC CONNECTION</div>
 </header>
 
 <div class="container">
 
-  <!-- 纪念日正计时 -->
+  <!-- 纪念日 -->
   <div class="card">
-    <h2>📅 我们的时间</h2>
-    <div class="days">
-      <div class="day-box">
-        相知
-        <span id="loveDays"></span>
-        天
+    <div class="card-title" id="daysTitle">◈ Timeline</div>
+    <div class="days-grid">
+      <div class="day-card">
+        <div class="day-label" id="loveLabel">Love</div>
+        <div class="day-number" id="loveDays">0</div>
+        <div class="day-unit">DAYS</div>
       </div>
-      <div class="day-box">
-        相识
-        <span id="knowDays"></span>
-        天
+      <div class="day-card">
+        <div class="day-label" id="meetLabel">Meet</div>
+        <div class="day-number" id="knowDays">0</div>
+        <div class="day-unit">DAYS</div>
       </div>
     </div>
   </div>
 
   <!-- 倒计时 -->
+  <div class="card countdown-wrapper" style="padding: 0; background: transparent; border: none; box-shadow: none;">
+    <div class="countdown-box">
+      <div class="countdown-label" id="countdownLabel">◆ Countdown ◆</div>
+      <div class="countdown-number" id="countdown">0</div>
+      <div class="countdown-text" id="countdownText">
+        距离某个搬石头的男人从山里出来还有 <span id="countdownDays">0</span> 天
+      </div>
+    </div>
+  </div>
+
+  <!-- 留言区 -->
   <div class="card">
-    <h2>⏳ 倒计时</h2>
-    <div class="countdown" id="countdown"></div>
+    <div class="card-title" id="msgTitle">◉ Transmission</div>
+    <div class="input-group">
+      <select id="author" onchange="setCurrentUser()">
+        <option value="">选择身份</option>
+        <option value="SY">SY</option>
+        <option value="JY">JY</option>
+      </select>
+      <div class="input-row">
+        <input id="messageText" placeholder="输入消息..." style="flex: 1;" />
+        <button class="btn" onclick="addMessage()" style="width: auto;">发送</button>
+      </div>
+    </div>
+    <ul id="messages" class="message-list">
+      <li class="empty-state">
+        <div class="empty-state-icon" id="msgEmptyIcon">📡</div>
+        <span id="msgEmpty">等待信号...</span>
+      </li>
+    </ul>
   </div>
 
   <!-- 时间轴 -->
   <div class="card">
-    <h2>🕰 恋爱大事记</h2>
-    <input id="eventText" placeholder="比如：第一次牵手 💕" />
-    <input id="eventDate" type="date" />
-    <button onclick="addEvent()">添加</button>
-    <ul id="timeline"></ul>
+    <div class="card-title" id="timelineTitle">◎ Star Map</div>
+    <div class="input-group">
+      <input id="eventText" placeholder="记录事件..." />
+      <div class="input-row">
+        <input id="eventDate" type="date" style="flex: 1;" />
+        <button class="btn btn-secondary" onclick="addEvent()" style="width: auto;">记录</button>
+      </div>
+    </div>
+    <ul id="timeline" class="timeline-list"></ul>
   </div>
 
 </div>
 
 <script>
-  // Firebase 配置（替换成你自己的）
-
+  // Firebase 配置
   const firebaseConfig = {
-  apiKey: "AIzaSyCSRTNZpvbyKNSNqyYH90cIL8dEFaYiX00",
-  authDomain: "love-space-4c3a9.firebaseapp.com",
-  projectId: "love-space-4c3a9",
-  storageBucket: "love-space-4c3a9.firebasestorage.app",
-  messagingSenderId: "780826442742",
-  appId: "1:780826442742:web:f8e051d51a4d3729be65d7"
-};
+    apiKey: "你的",
+    authDomain: "你的",
+    projectId: "你的"
+  };
 
+  // 主题管理
+  let currentTheme = localStorage.getItem('theme') || 'dark';
+  document.body.setAttribute('data-theme', currentTheme === 'light' ? 'light' : '');
+  updateThemeUI();
 
+  function toggleTheme() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', currentTheme === 'light' ? 'light' : '');
+    localStorage.setItem('theme', currentTheme);
+    updateThemeUI();
+  }
+
+  function updateThemeUI() {
+    const isLight = currentTheme === 'light';
+    document.getElementById('themeIcon').textContent = isLight ? '☀️' : '🌙';
+    document.getElementById('subtitle').textContent = isLight ? 'SY & JY ' : 'SY & JY // COSMIC CONNECTION';
+
+    // 更新文案
+    document.getElementById('daysTitle').innerHTML = isLight ? '<span>📅</span> 我们的时间' : '<span>◈</span> Timeline';
+    document.getElementById('loveLabel').textContent = isLight ? '相知' : 'Connect';
+    document.getElementById('meetLabel').textContent = isLight ? '相识' : 'Meet';
+    document.getElementById('countdownLabel').textContent = isLight ? '倒计时' : '◆ Countdown ◆';
+    document.getElementById('msgTitle').innerHTML = isLight ? '<span>💌</span> 留言' : '<span>◉</span> Transmission';
+    document.getElementById('timelineTitle').innerHTML = isLight ? '<span>🕰</span> 大事记' : '<span>◎</span> Star Map';
+
+    document.getElementById('msgEmptyIcon').textContent = isLight ? '💭' : '📡';
+    document.getElementById('msgEmpty').textContent = isLight ? '还没有留言，来说点什么吧～' : '等待信号...';
+
+    // 更新输入框 placeholder
+    document.getElementById('author').options[0].text = isLight ? '选择身份' : '选择身份';
+    document.getElementById('messageText').placeholder = isLight ? '想对TA说的悄悄话...' : '输入消息...';
+    document.getElementById('eventText').placeholder = isLight ? '比如：第一次牵手 💕' : '记录事件...';
+
+    // 更新按钮文字
+    document.querySelector('.btn-secondary').textContent = isLight ? '添加' : '记录';
+  }
+
+  let currentUser = localStorage.getItem('loverUser') || '';
+  if (currentUser) {
+    document.getElementById('author').value = currentUser;
+  }
 
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // 日期设置（重要）
   const knowDate = new Date("2025-12-31");
   const loveDate = new Date("2026-01-26");
-  const nextDate = new Date("2026-03-02");
+  const nextDate = new Date("2026-02-04");
 
   function daysBetween(a, b) {
     return Math.floor((b - a) / (1000 * 60 * 60 * 24));
   }
 
-  const today = new Date();
-  document.getElementById("knowDays").innerText = daysBetween(knowDate, today);
-  document.getElementById("loveDays").innerText = daysBetween(loveDate, today);
+  function updateDays() {
+    const today = new Date();
+    const knowDays = daysBetween(knowDate, today);
+    const loveDays = daysBetween(loveDate, today);
+    const cd = daysBetween(today, nextDate);
 
-  // 倒计时
-  const cd = daysBetween(today, nextDate);
-  document.getElementById("countdown").innerText = `距离见面倒计时日子还有 ${cd} 天 💞`;
+    animateNumber('knowDays', knowDays);
+    animateNumber('loveDays', loveDays);
+    animateNumber('countdown', cd);
+    document.getElementById('countdownDays').textContent = cd;
+  }
 
-  // 时间轴
+  function animateNumber(id, target) {
+    const el = document.getElementById(id);
+    const start = parseInt(el.textContent) || 0;
+    const duration = 800;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(start + (target - start) * easeOut);
+      el.textContent = current;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  updateDays();
+  setInterval(updateDays, 60000);
+
+  function setCurrentUser() {
+    const user = document.getElementById("author").value;
+    if (!user) return;
+    currentUser = user;
+    localStorage.setItem('loverUser', user);
+  }
+
+  function addMessage() {
+    const author = document.getElementById("author").value;
+    const text = document.getElementById("messageText").value.trim();
+
+    if (!author) {
+      alert(currentTheme === 'light' ? '请先选择身份哦～' : '请先选择身份');
+      document.getElementById('author').focus();
+      return;
+    }
+    if (!text) return;
+
+    db.collection("messages").add({
+      author,
+      text,
+      time: new Date()
+    }).then(() => {
+      document.getElementById("messageText").value = "";
+    });
+  }
+
+  db.collection("messages")
+    .orderBy("time", "desc")
+    .onSnapshot(snap => {
+      const list = document.getElementById("messages");
+      if (snap.empty) {
+        list.innerHTML = `
+          <li class="empty-state">
+            <div class="empty-state-icon">${currentTheme === 'light' ? '💭' : '📡'}</div>
+            ${currentTheme === 'light' ? '还没有留言，来说点什么吧～' : '等待信号...'}
+          </li>
+        `;
+        return;
+      }
+
+      list.innerHTML = "";
+      snap.forEach(doc => {
+        const m = doc.data();
+        const time = m.time ? new Date(m.time.toDate()).toLocaleString('zh-CN', {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : '';
+
+        const li = document.createElement("li");
+        li.className = "message-item";
+
+        const isOwner = m.author === currentUser;
+        const deleteBtn = isOwner ?
+          `<button class="btn-delete" onclick="deleteMessage('${doc.id}')">删除</button>` : '';
+
+        li.innerHTML = `
+          <div class="message-header">
+            <span class="message-author">${m.author}</span>
+            <span class="message-time">${time}</span>
+          </div>
+          <div class="message-text">${escapeHtml(m.text)}</div>
+          ${deleteBtn ? `<div class="message-actions">${deleteBtn}</div>` : ''}
+        `;
+        list.appendChild(li);
+      });
+    });
+
+  function deleteMessage(id) {
+    if (confirm("确定要删除吗？")) {
+      db.collection("messages").doc(id).delete();
+    }
+  }
+
   function addEvent() {
-    const text = eventText.value;
-    const date = eventDate.value;
+    const text = document.getElementById("eventText").value.trim();
+    const date = document.getElementById("eventDate").value;
+
     if (!text || !date) return;
 
     db.collection("timeline").add({
       text,
-      date
+      date,
+      createdAt: new Date()
+    }).then(() => {
+      document.getElementById("eventText").value = "";
+      document.getElementById("eventDate").value = "";
     });
-
-    eventText.value = "";
-    eventDate.value = "";
   }
 
   db.collection("timeline")
-    .orderBy("date")
+    .orderBy("date", "desc")
     .onSnapshot(snap => {
-      timeline.innerHTML = "";
+      const list = document.getElementById("timeline");
+      list.innerHTML = "";
+
+      if (snap.empty) {
+        list.innerHTML = `
+          <li class="empty-state" style="margin-left: -24px;">
+            <div class="empty-state-icon">${currentTheme === 'light' ? '📝' : '🌌'}</div>
+            ${currentTheme === 'light' ? '还没有记录，添加你们的第一个回忆吧' : '星图空白...'}
+          </li>
+        `;
+        return;
+      }
+
       snap.forEach(doc => {
         const e = doc.data();
         const li = document.createElement("li");
-        li.innerHTML = `<strong>${e.text}</strong><div class='time'>${e.date}</div>`;
-        timeline.appendChild(li);
+        li.className = "timeline-item";
+        li.innerHTML = `
+          <div class="timeline-content">
+            <div class="timeline-text">${escapeHtml(e.text)}</div>
+            <div class="timeline-date">${e.date}</div>
+            <button class="btn-delete timeline-delete" onclick="deleteEvent('${doc.id}')">删除</button>
+          </div>
+        `;
+        list.appendChild(li);
       });
     });
+
+  function deleteEvent(id) {
+    if (confirm("确定要删除吗？")) {
+      db.collection("timeline").doc(id).delete();
+    }
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  document.getElementById('messageText').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      addMessage();
+    }
+  });
 </script>
 
 </body>
