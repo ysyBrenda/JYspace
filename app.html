@@ -1,30 +1,225 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lover Space 💞</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Love Space 💖</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --pink: #ff6b9a;
+      --bg: #fff6fa;
+      --card: #ffffff;
+      --text: #333;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .container {
+      padding: 16px;
+      max-width: 520px;
+      margin: auto;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    .days {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .day-box {
+      flex: 1;
+      background: #fff0f6;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .day-box span {
+      display: block;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--pink);
+    }
+
+    .countdown {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--pink);
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    button {
+      background: var(--pink);
+      color: white;
+      border: none;
+      font-weight: 600;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      padding: 8px 0;
+      border-left: 3px solid var(--pink);
+      padding-left: 12px;
+      margin-bottom: 8px;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #999;
+    }
+  </style>
 </head>
 <body>
 
-<h2>在一起第 <span id="days"></span> 天 💕</h2>
+<header>
+  <h1>💖 SY and JY 💖 Love Space</h1>
+</header>
 
-<section>
-  <h3>💬 留言板</h3>
-  <select id="author">
-    <option>SY</option>
-    <option>JY</option>
-  </select>
-  <input id="message" placeholder="想说的话…">
-  <button onclick="addMessage()">发送</button>
-  <ul id="messages"></ul>
-</section>
+<div class="container">
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="firebase.js"></script>
-<script src="app.js"></script>
+  <!-- 纪念日正计时 -->
+  <div class="card">
+    <h2>📅 我们的时间</h2>
+    <div class="days">
+      <div class="day-box">
+        在一起
+        <span id="loveDays"></span>
+        天
+      </div>
+      <div class="day-box">
+        认识
+        <span id="knowDays"></span>
+        天
+      </div>
+    </div>
+  </div>
+
+  <!-- 倒计时 -->
+  <div class="card">
+    <h2>⏳ 倒计时</h2>
+    <div class="countdown" id="countdown"></div>
+  </div>
+
+  <!-- 时间轴 -->
+  <div class="card">
+    <h2>🕰 恋爱大事记</h2>
+    <input id="eventText" placeholder="比如：第一次牵手 💕" />
+    <input id="eventDate" type="date" />
+    <button onclick="addEvent()">添加</button>
+    <ul id="timeline"></ul>
+  </div>
+
+</div>
+
+<script>
+  // Firebase 配置（替换成你自己的）
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyCSRTNZpvbyKNSNqyYH90cIL8dEFaYiX00",
+  authDomain: "love-space-4c3a9.firebaseapp.com",
+  projectId: "love-space-4c3a9",
+  storageBucket: "love-space-4c3a9.firebasestorage.app",
+  messagingSenderId: "780826442742",
+  appId: "1:780826442742:web:f8e051d51a4d3729be65d7"
+};
+
+
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // 日期设置（重要）
+  const knowDate = new Date("2025-12-31");
+  const loveDate = new Date("2026-01-26");
+  const nextDate = new Date("2026-03-02");
+
+  function daysBetween(a, b) {
+    return Math.floor((b - a) / (1000 * 60 * 60 * 24));
+  }
+
+  const today = new Date();
+  document.getElementById("knowDays").innerText = daysBetween(knowDate, today);
+  document.getElementById("loveDays").innerText = daysBetween(loveDate, today);
+
+  // 倒计时
+  const cd = daysBetween(today, nextDate);
+  document.getElementById("countdown").innerText = `距离见面倒计时日子还有 ${cd} 天 💞`;
+
+  // 时间轴
+  function addEvent() {
+    const text = eventText.value;
+    const date = eventDate.value;
+    if (!text || !date) return;
+
+    db.collection("timeline").add({
+      text,
+      date
+    });
+
+    eventText.value = "";
+    eventDate.value = "";
+  }
+
+  db.collection("timeline")
+    .orderBy("date")
+    .onSnapshot(snap => {
+      timeline.innerHTML = "";
+      snap.forEach(doc => {
+        const e = doc.data();
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${e.text}</strong><div class='time'>${e.date}</div>`;
+        timeline.appendChild(li);
+      });
+    });
+</script>
 
 </body>
 </html>
