@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lover Space 💞</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>在一起第 <span id="days"></span> 天 💕</h2>
+
+<section>
+  <h3>💬 留言板</h3>
+  <select id="author">
+    <option>SY</option>
+    <option>JY</option>
+  </select>
+  <input id="message" placeholder="想说的话…">
+  <button onclick="addMessage()">发送</button>
+  <ul id="messages"></ul>
+</section>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

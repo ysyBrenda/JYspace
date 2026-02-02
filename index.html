@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Space 🔐</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="center">
+  <h1>💖 Love Space</h1>
+  <input type="password" id="pin" placeholder="情侣暗号 PIN">
+  <button onclick="unlock()">进入</button>
+
+  <script>
+    function unlock() {
+      const pin = document.getElementById("pin").value;
+      if (pin === "826") {   // ← 自己改
+        localStorage.setItem("loverUnlocked", "true");
+        window.location.href = "app.html";
+      } else {
+        alert("暗号不对哦 💔, 是SY的生日啦笨蛋");
+      }
+    }
+  </script>
+</body>
+</html>
