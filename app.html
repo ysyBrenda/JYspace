@@ -12,6 +12,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
+
   <style>
     :root {
       /* 默认夜晚主题 */
@@ -24,6 +25,7 @@
       --text-primary: #F1F5F9;
       --text-secondary: #94A3B8;
       --text-muted: #64748B;
+      --star-gold: #FDE68A;
       --card-bg: rgba(255, 255, 255, 0.03);
       --card-border: rgba(255, 255, 255, 0.08);
       --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -148,6 +150,14 @@
       letter-spacing: 2px;
       flex: 1;
       text-align: center;
+    }
+
+    .star-icon {
+      color: var(--star-gold);
+      -webkit-text-fill-color: var(--star-gold);
+      animation: twinkle 2s ease-in-out infinite;
+      font-size: 18px;
+      font-style: normal;
     }
 
     .theme-toggle {
@@ -354,11 +364,8 @@
     }
 
     body:not([data-theme="light"]) .countdown-number {
-      background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 0 0 30px rgba(167, 139, 250, 0.3);
+      color: var(--accent-2);
+      text-shadow: 0 0 20px rgba(94, 234, 212, 0.5);
     }
 
     [data-theme="light"] .countdown-number {
@@ -881,7 +888,7 @@
 <header>
   <div class="header-top">
     <div style="width: 44px;"></div>
-    <h1>Love Space</h1>
+    <h1><span class="star-icon">✦</span> Love Space <span class="star-icon">✦</span></h1>
     <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
       <span id="themeIcon">🌙</span>
     </button>
@@ -915,10 +922,12 @@
   <!-- 倒计时 -->
   <div class="card countdown-wrapper" style="padding: 0; background: transparent; border: none; box-shadow: none;">
     <div class="countdown-box">
-      <div class="countdown-label" id="countdownLabel">◆ Countdown ◆</div>
+      <div class="countdown-label" id="countdownLabel">◆ 💍Countdown ◆</div>
       <div class="countdown-number" id="countdown">0</div>
       <div class="countdown-text" id="countdownText">
-        距离元宵节还有 <span id="countdownDays">0</span> 天
+<!--        在一起第 <span id="countdownDays">0</span> 天<br>-->
+        <div class="day-unit">DAYS</div>
+        <span style="font-size: 11px; opacity: 0.7; margin-top: 8px; display: inline-block;">💫 Every day is worth celebrating 💫</span>
       </div>
     </div>
   </div>
@@ -1035,7 +1044,7 @@
     document.getElementById('daysTitle').innerHTML = isLight ? '<span>📅</span> 我们的时间' : '<span>◈</span> Timeline';
     document.getElementById('loveLabel').textContent = isLight ? '相知' : 'Connect';
     document.getElementById('meetLabel').textContent = isLight ? '相识' : 'Meet';
-    document.getElementById('countdownLabel').textContent = isLight ? '倒计时' : '◆ Countdown ◆';
+    document.getElementById('countdownLabel').textContent = isLight ? '💖纪念日' : '◆ ANNIVERSARY ◆';
     document.getElementById('msgTitle').innerHTML = isLight ? '<span>💌</span> 留言' : '<span>◉</span> Transmission';
     document.getElementById('timelineTitle').innerHTML = isLight ? '<span>🕰</span> 大事记' : '<span>◎</span> Star Map';
 
@@ -1066,8 +1075,8 @@
   const db = firebase.firestore();
 
   const knowDate = new Date("2025-12-31");
-  const loveDate = new Date("2026-01-26");
-  const nextDate = new Date("2026-03-04");
+  const loveDate = new Date("2026-01-25");
+  const futureDate = new Date("2026-03-03"); // 在这里修改你们的纪念日
 
   function daysBetween(a, b) {
     return Math.floor((b - a) / (1000 * 60 * 60 * 24));
@@ -1077,7 +1086,7 @@
     const today = new Date();
     const knowDays = daysBetween(knowDate, today);
     const loveDays = daysBetween(loveDate, today);
-    const cd = daysBetween(today, nextDate);
+    const cd = daysBetween(futureDate, today) + 1;
 
     animateNumber('knowDays', knowDays);
     animateNumber('loveDays', loveDays);
