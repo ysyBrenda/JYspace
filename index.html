@@ -4,23 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Love Space 🔐</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/css/index.css">
 </head>
 <body class="center">
   <h1>💖 Love Space</h1>
-  <input type="password" id="pin" placeholder="暗号 PIN">
-  <button onclick="unlock()">进入</button>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button type="button" id="loginBtn">登录</button>
+  <div id="loginError" style="margin-top: 10px; font-size: 12px; opacity: 0.8;"></div>
 
-  <script>
-    function unlock() {
-      const pin = document.getElementById("pin").value;
-      if (pin === "826") {   //
-        localStorage.setItem("loverUnlocked", "true");
-        window.location.href = "app.html";
-      } else {
-        alert("暗号不对哦 💔, 是SY的生日啦笨蛋");
-      }
-    }
-  </script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script defer src="assets/js/firebase.js"></script>
+  <script defer src="assets/js/index.js"></script>
 </body>
 </html>

@@ -1,0 +1,17 @@
+body {
+  font-family: system-ui;
+  padding: 16px;
+  background: #fff0f5;
+}
+
+.center {
+  text-align: center;
+  margin-top: 30vh;
+}
+
+input, button, select {
+  padding: 10px;
+  margin: 6px;
+  width: 90%;
+  max-width: 300px;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Messages | Love Space</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&family=LXGW+WenKai:wght@400;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script defer src="assets/js/firebase.js"></script>
+  <script defer src="assets/js/messages.js"></script>
+
+  <link rel="stylesheet" href="assets/css/app.css" />
+</head>
+<body data-page="messages">
+  <header>
+    <div class="header-top">
+      <a class="more-link" href="app.html" title="返回首页">← Back</a>
+      <h1><span class="star-icon">✦</span> Messages <span class="star-icon">✦</span></h1>
+      <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
+    <div class="subtitle" id="subtitle">SY & JY // ALL TRANSMISSIONS</div>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-left">
+          <span id="msgTitle">◉ Transmission</span>
+          <span class="list-stats" id="msgStats"></span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <select id="author" onchange="setCurrentUser()">
+          <option value="">选择身份</option>
+          <option value="SY">SY</option>
+          <option value="JY">JY</option>
+        </select>
+        <div class="input-row">
+          <input id="messageText" placeholder="输入消息..." style="flex: 1;" />
+          <button class="btn" onclick="addMessage()" style="width: auto;">发送</button>
+        </div>
+      </div>
+
+      <ul id="messages" class="message-list"></ul>
+
+      <div class="pagination" id="msgPagination" style="display: none;">
+        <button class="pagination-btn" onclick="changePage(-1)" id="msgPrev">← 上一页</button>
+        <span class="pagination-info" id="msgPageInfo">1 / 1</span>
+        <button class="pagination-btn" onclick="changePage(1)" id="msgNext">下一页 →</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
