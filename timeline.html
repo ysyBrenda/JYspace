@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Messages | Love Space</title>
+  <title>Timeline | Love Space</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,43 +12,41 @@
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script defer src="firebase.js?v=build20260320e"></script>
-  <script defer src="messages.js?v=build20260320e"></script>
+  <script defer src="timeline.js?v=build20260320e"></script>
   <link rel="stylesheet" href="app.css?v=build20260320e" />
 </head>
-<body>
+<body data-page="timeline">
 <header>
   <div class="header-top">
     <a class="more-link" href="app.html" title="返回首页">← Back</a>
-    <h1><span class="star-icon">✦</span> Messages <span class="star-icon">✦</span></h1>
+    <h1><span class="star-icon">✦</span> Timeline <span class="star-icon">✦</span></h1>
     <button class="theme-toggle" onclick="toggleTheme()" title="切换主题">
       <span id="themeIcon">🌙</span>
     </button>
   </div>
-  <div class="subtitle" id="subtitle">SY & JY // ALL TRANSMISSIONS</div>
+  <div class="subtitle" id="subtitle">SY & JY // STAR MAP</div>
 </header>
 
 <div class="container">
   <div class="card">
     <div class="card-title">
       <div class="card-title-left">
-        <span id="msgTitle">◉ Transmission</span>
-        <span class="list-stats" id="msgStats"></span>
+        <span id="timelineTitle">◎ Star Map</span>
+        <span class="list-stats" id="timelineStats"></span>
       </div>
     </div>
 
     <div class="input-group">
-      <select id="author" onchange="setCurrentUser()">
-        <option value="">选择身份</option>
-        <option value="SY">SY</option>
-        <option value="JY">JY</option>
-      </select>
+      <input id="eventText" placeholder="记录事件..." />
       <div class="input-row">
-        <input id="messageText" placeholder="输入消息..." style="flex: 1;" />
-        <button class="btn" onclick="addMessage()" style="width: auto;">发送</button>
+        <input id="eventDate" type="date" style="flex: 1;" />
+        <button class="btn btn-secondary" onclick="addEvent()" style="width: auto;">记录</button>
       </div>
     </div>
 
-    <ul id="messages" class="message-list"></ul>
+    <div class="timeline-container" id="timelineContainer">
+      <ul id="timeline" class="timeline-list"></ul>
+    </div>
   </div>
 </div>
 </body>

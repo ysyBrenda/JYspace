@@ -11,10 +11,7 @@
 
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script defer src="assets/js/firebase.js?v=pin20260318"></script>
-  <script defer src="assets/js/app.js?v=pin20260318"></script>
-
-  <link rel="stylesheet" href="assets/css/app.css" />
+  <link rel="stylesheet" href="app.css?v=build20260320e" />
 </head>
 <body data-page="home">
 
@@ -73,13 +70,9 @@
         <span class="list-stats" id="msgStats"></span>
       </div>
       <a class="more-link" href="messages.html" title="查看全部留言">MORE</a>
-      <button class="toggle-btn" id="msgToggle" onclick="toggleSection('messages')">
-        <span class="text">收起</span>
-        <span class="arrow">▼</span>
-      </button>
     </div>
 
-    <div class="collapsible-content" id="msgContent">
+    <div id="msgContent">
       <div class="input-group">
         <select id="author" onchange="setCurrentUser()">
           <option value="">选择身份</option>
@@ -93,16 +86,6 @@
       </div>
 
       <ul id="messages" class="message-list"></ul>
-
-      <div class="pagination" id="msgPagination" style="display: none;">
-        <button class="pagination-btn" onclick="changePage('messages', -1)" id="msgPrev">
-          ← 上一页
-        </button>
-        <span class="pagination-info" id="msgPageInfo">1 / 1</span>
-        <button class="pagination-btn" onclick="changePage('messages', 1)" id="msgNext">
-          下一页 →
-        </button>
-      </div>
     </div>
   </div>
 
@@ -113,13 +96,10 @@
         <span id="timelineTitle">◎ Star Map</span>
         <span class="list-stats" id="timelineStats"></span>
       </div>
-      <button class="toggle-btn" id="timelineToggle" onclick="toggleSection('timeline')">
-        <span class="text">收起</span>
-        <span class="arrow">▼</span>
-      </button>
+      <a class="more-link" href="timeline.html" title="查看全部时间轴">MORE</a>
     </div>
 
-    <div class="collapsible-content" id="timelineContent">
+    <div id="timelineContent">
       <div class="input-group">
         <input id="eventText" placeholder="记录事件..." />
         <div class="input-row">
@@ -131,23 +111,12 @@
       <div class="timeline-container" id="timelineContainer">
         <ul id="timeline" class="timeline-list"></ul>
       </div>
-
-      <div class="pagination" id="timelinePagination" style="display: none;">
-        <button class="pagination-btn" onclick="changePage('timeline', -1)" id="timelinePrev">
-          ← 上一页
-        </button>
-        <span class="pagination-info" id="timelinePageInfo">1 / 1</span>
-        <button class="pagination-btn" onclick="changePage('timeline', 1)" id="timelineNext">
-          下一页 →
-        </button>
-      </div>
     </div>
   </div>
 
 </div>
-
-
-
+  <script defer src="firebase.js?v=build20260320e"></script>
+  <script defer src="app.js?v=build20260320e"></script>
 </body>
 
 </html>

@@ -4,13 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Love Space 🔐</title>
-  <link rel="stylesheet" href="assets/css/index.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body class="center">
   <h1>💖 Love Space</h1>
   <input type="password" id="pin" placeholder="暗号 PIN">
-  <button type="button" id="unlockBtn">进入</button>
+  <button onclick="unlock()">进入</button>
 
-  <script defer src="assets/js/index.js?v=pin20260318"></script>
+  <script>
+    function unlock() {
+      const pin = document.getElementById("pin").value;
+      if (pin === "826") {   //
+        localStorage.setItem("loverUnlocked", "true");
+        window.location.href = "app.html";
+      } else {
+        alert("暗号不对哦 💔, 是SY的生日啦笨蛋");
+      }
+    }
+  </script>
 </body>
 </html>
