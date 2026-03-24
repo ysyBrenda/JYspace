@@ -20,5 +20,8 @@
     firebase.initializeApp(firebaseConfig);
   }
 
+  window.auth = firebase.auth();
   window.db = firebase.firestore();
+  window.ALLOWED_EMAILS = ['yushuyan826@gmail.com', '3284606522@qq.com'];
+
 })();

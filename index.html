@@ -2,25 +2,98 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
+  <meta name="referrer" content="origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Love Space 🔐</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Love Space</title>
+  <link rel="stylesheet" href="style.css?v=build20260324a">
+
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script defer src="firebase.js?v=build20260324a"></script>
 </head>
 <body class="center">
-  <h1>💖 Love Space</h1>
-  <input type="password" id="pin" placeholder="暗号 PIN">
-  <button onclick="unlock()">进入</button>
+  <h1>Love Space</h1>
+
+  <input type="email" id="email" placeholder="邮箱" autocomplete="username" />
+  <input type="password" id="password" placeholder="密码" autocomplete="current-password" />
+  <button type="button" id="loginBtn">登录</button>
+  <div id="status" style="margin-top: 10px; font-size: 12px; opacity: 0.8;"></div>
 
   <script>
-    function unlock() {
-      const pin = document.getElementById("pin").value;
-      if (pin === "826") {   //
-        localStorage.setItem("loverUnlocked", "true");
-        window.location.href = "app.html";
-      } else {
-        alert("暗号不对哦 💔, 是SY的生日啦笨蛋");
+    (function () {
+      'use strict';
+
+      var allowed = ['yushuyan826@gmail.com', '3284606522@qq.com'];
+      var $ = function (id) { return document.getElementById(id); };
+      var statusEl = $('status');
+
+      function setStatus(msg) {
+        if (!statusEl) return;
+        statusEl.textContent = msg || '';
       }
-    }
+
+      function normalizeEmail(v) {
+        return String(v || '').trim().toLowerCase();
+      }
+
+      function isAllowed(email) {
+        return allowed.indexOf(normalizeEmail(email)) !== -1;
+      }
+
+      function goApp() {
+        window.location.href = 'app.html';
+      }
+
+      function ready() {
+        if (location.protocol === 'file:' || location.origin === 'null') {
+          setStatus('请通过 http(s) 打开页面（不要用 file:// 直接打开）。');
+          return;
+        }
+
+        if (!window.auth) {
+          setStatus('Auth 未初始化，请检查 firebase.js 是否正常加载。');
+          return;
+        }
+
+        window.auth.onAuthStateChanged(function (user) {
+          if (user && isAllowed(user.email)) {
+            goApp();
+            return;
+          }
+          if (user && !isAllowed(user.email)) {
+            window.auth.signOut();
+            setStatus('该邮箱无权限。');
+          }
+        });
+
+        $('loginBtn').addEventListener('click', function () {
+          var email = normalizeEmail($('email').value);
+          var password = $('password').value || '';
+
+          if (!isAllowed(email)) {
+            alert('无权限邮箱：' + email);
+            return;
+          }
+
+          setStatus('登录中...');
+          window.auth.signInWithEmailAndPassword(email, password)
+            .then(function () {
+              goApp();
+            })
+            .catch(function (err) {
+              console.error(err);
+              var msg = (err && err.code === 'auth/requests-from-referer-null-are-blocked')
+                ? '登录失败：当前请求 Referer 为 null。请确认不是用 file:// 打开；并在 Google Cloud 的 API Key 限制中允许你的网站域名。'
+                : ('登录失败：' + (err && err.message ? err.message : String(err)));
+              alert(msg);
+              setStatus('');
+            });
+        });
+      }
+
+      window.addEventListener('load', ready);
+    })();
   </script>
 </body>
 </html>

@@ -2,6 +2,35 @@
 (() => {
   'use strict';
 
+  // Auth gate: require login + allowlist
+  const auth = window.auth;
+  const allowedEmails = (window.ALLOWED_EMAILS || []).map((e) => String(e || '').trim().toLowerCase());
+  function normEmail(v) { return String(v || '').trim().toLowerCase(); }
+  function redirectToLogin() { window.location.href = 'index.html'; }
+
+  // Hide until auth is confirmed to avoid flashing protected content
+  try { document.documentElement.style.visibility = 'hidden'; } catch (e) { /* ignore */ }
+
+  if (!auth || typeof auth.onAuthStateChanged !== 'function') {
+    redirectToLogin();
+    return;
+  }
+
+  auth.onAuthStateChanged((user) => {
+    if (!user) {
+      redirectToLogin();
+      return;
+    }
+    const email = normEmail(user.email);
+    if (allowedEmails.length && allowedEmails.indexOf(email) === -1) {
+      alert('??????');
+      auth.signOut().finally(redirectToLogin);
+      return;
+    }
+    try { document.documentElement.style.visibility = ''; } catch (e) { /* ignore */ }
+  });
+
+
   const db = window.db;
   if (!db || typeof db.collection !== 'function') {
     console.error('Firestore not initialized. Check firebase.js and Firebase SDK tags.');
